@@ -1,0 +1,5 @@
+package catEffect
+
+sourcedir = "src"
+
+modules = Cats.Effect.CatsIO
