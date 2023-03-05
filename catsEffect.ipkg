@@ -2,4 +2,8 @@ package catEffect
 
 sourcedir = "src"
 
+main = Main
+executable = test
+
 modules = Cats.Effect.CatsIO
+    , Cats.Effect.Instances.CatsIO

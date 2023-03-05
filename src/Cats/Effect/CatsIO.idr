@@ -3,11 +3,10 @@ module Cats.Effect.CatsIO
 public export
 data CatsIO : Type -> Type where [external]
 
-{-
-Functor CatsIO where
-    map = 3
+public export
+%foreign "jvm:ioPrintLn(String cats/effect/IO),cats/effect/idris/Wrapper"
+catsPrintLn : String -> CatsIO ()
 
-Applicative CatsIO where
-    pure = pureIO
-    (<*>) = 3
-    -}
+public export
+%foreign "jvm:ioReadLn(cats/effect/IO),cats/effect/idris/Wrapper"
+catsReadLn : CatsIO String
