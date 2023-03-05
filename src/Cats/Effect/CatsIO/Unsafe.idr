@@ -25,8 +25,8 @@ public export
 pureIO : a -> CatsIO a
 pureIO a = unsafeCoerce $ pureIOUnsafe $ unsafeCoerce a
 
-%foreign "jvm:ioMap(java.util.function.Function cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
-mapIOUnsafe : (AnyPtr -> AnyPtr) -> CatsIO AnyPtr -> CatsIO AnyPtr
+%foreign "jvm:ioMap(java/lang/Object cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
+mapIOUnsafe : AnyPtr -> CatsIO AnyPtr -> CatsIO AnyPtr
 
 public export
 mapIO : (a -> b) -> CatsIO a -> CatsIO b

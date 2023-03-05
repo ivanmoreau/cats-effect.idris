@@ -1,22 +1,22 @@
 package cats.effect.idris
 
-import cats.effect.unsafe.implicits._
+import cats.effect.unsafe.implicits.*
 import cats.effect.IO
 
 import java.util.function.Function
 import cats.effect.std
 import cats.effect.unsafe.IORuntime
 
-object Wrapper {
+object Wrapper:
   def globalIO(): Any = global
   def unsafeRunSync(a: IO[Any], b: IORuntime): Any = a.unsafeRunSync()(b)
   
   def unsafeCoerce(tt: Any, tt2: Any, a: Any): Any = a
 
-  def ioMap(a: Function[Any, Any], xs: IO[Any]): IO[Any] = xs.map(fromJavaFun(a)(_))
+  def ioMap(a: Any, xs: IO[Any]): IO[Any] = xs.map(fromJavaFun(a.asInstanceOf[Function[Any, Any]])(_))
 
   def ioAp(a: IO[Function[Any, Any]], b: IO[Any]): IO[Any] = a.flatMap(f => b.map(f.apply))
-  def ioPure(a: Any): Any = IO.pure(a)
+  def ioPure(a: Any): IO[Any] = IO.pure(a)
 
   def ioBind(a: IO[Any], b: Any): IO[Any] = a.flatMap(b.asInstanceOf[Function[Any, IO[Any]]].apply)
 
@@ -27,6 +27,3 @@ object Wrapper {
 
   def ioPrintLn(t: String): IO[Unit] = std.Console[IO].println(t)
   def ioReadLn(): IO[String] = std.Console[IO].readLine
-
-
-}
