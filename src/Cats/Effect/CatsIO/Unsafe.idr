@@ -1,6 +1,6 @@
-module Cats.Effect.Unsafe.CatsIOMethods
+module Cats.Effect.CatsIO.Unsafe
 
-import Cats.Effect.CatsIO
+import Cats.Effect.CatsIO.CatsIO
 
 %foreign "jvm:unsafeCoerce,cats/effect/idris/Wrapper"
 unsafeCoerce : forall a, b. a -> b

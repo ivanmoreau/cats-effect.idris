@@ -1,8 +1,6 @@
 module Main
 
 import Cats.Effect.CatsIO
-import Cats.Effect.Instances.CatsIO
-import Cats.Effect.Unsafe.CatsIOMethods
 
 cats : CatsIO ()
 cats = do

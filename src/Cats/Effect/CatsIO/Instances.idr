@@ -1,7 +1,7 @@
-module Cats.Effect.Instances.CatsIO
+module Cats.Effect.CatsIO.Instances
 
-import Cats.Effect.CatsIO
-import Cats.Effect.Unsafe.CatsIOMethods
+import Cats.Effect.CatsIO.CatsIO
+import Cats.Effect.CatsIO.Unsafe
 
 public export
 Functor CatsIO where

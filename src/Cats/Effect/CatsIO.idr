@@ -1,12 +1,10 @@
 module Cats.Effect.CatsIO
 
-public export
-data CatsIO : Type -> Type where [external]
+import public Cats.Effect.CatsIO.CatsIO
+import public Cats.Effect.CatsIO.Instances
+
+import Cats.Effect.CatsIO.Unsafe
 
 public export
-%foreign "jvm:ioPrintLn(String cats/effect/IO),cats/effect/idris/Wrapper"
-catsPrintLn : String -> CatsIO ()
-
-public export
-%foreign "jvm:ioReadLn(cats/effect/IO),cats/effect/idris/Wrapper"
-catsReadLn : CatsIO String
+runCatsIO : CatsIO a -> IO a
+runCatsIO = Cats.Effect.CatsIO.Unsafe.runCatsIO
