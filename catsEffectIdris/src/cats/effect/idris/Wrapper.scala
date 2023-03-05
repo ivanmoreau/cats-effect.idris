@@ -4,6 +4,7 @@ import cats.effect.unsafe.implicits.*
 import cats.effect.IO
 import cats.effect.FiberIO
 
+import scala.concurrent.duration._
 import java.util.function.Function
 import cats.effect.unsafe.IORuntime
 
@@ -26,3 +27,7 @@ object Wrapper:
   def toJavaFun(o: Function1[Any, Any]): Function[Any, Any] = new Function[Any, Any] {
     def apply(t: Any): Any = o.apply(t)
   }
+
+  def sleep(milli: Int): IO[Unit] = IO.sleep(milli.millisecond)
+
+  def foreverIO(a: IO[Any]): IO[Any] = a.foreverM

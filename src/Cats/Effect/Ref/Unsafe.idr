@@ -17,7 +17,7 @@ refIO v = unsafeCoerce $ unsafeRefIO $ unsafeCoerce v
 unsafeSetIO : AnyPtr -> Ref CatsIO AnyPtr -> CatsIO (Ref CatsIO AnyPtr)
 
 public export
-setIO : a -> Ref CatsIO a -> CatsIO (Ref CatsIO a)
+setIO : a -> Ref CatsIO a -> CatsIO () 
 setIO a ref = unsafeCoerce $ unsafeSetIO (unsafeCoerce a) (unsafeCoerce ref)
 
 %foreign "jvm:getIO(cats/effect/kernel/Ref cats/effect/IO),cats/effect/idris/Ref"

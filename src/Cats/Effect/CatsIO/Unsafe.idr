@@ -1,6 +1,7 @@
 module Cats.Effect.CatsIO.Unsafe
 
 import Cats.Effect.CatsIO.CatsIO
+import Cats.Effect.FiberIO.FiberIO
 
 %foreign "jvm:unsafeCoerce,cats/effect/idris/Wrapper"
 unsafeCoerce : forall a, b. a -> b
@@ -45,3 +46,24 @@ bindIOUnsafe : CatsIO AnyPtr -> AnyPtr -> CatsIO AnyPtr
 public export
 bindIO : CatsIO a -> (a -> CatsIO b) -> CatsIO b
 bindIO io f = unsafeCoerce $ bindIOUnsafe (unsafeCoerce io) (unsafeCoerce f)
+
+%foreign "jvm:start(cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
+startUnsafe : CatsIO AnyPtr -> CatsIO (FiberIO AnyPtr)
+
+public export
+start : CatsIO a -> CatsIO (FiberIO a)
+start c = unsafeCoerce $ startUnsafe $ unsafeCoerce c
+
+%foreign "jvm:sleep(Int cats/effect/IO),cats/effect/idris/Wrapper"
+sleepUnsafe : Int -> CatsIO ()
+
+public export
+sleep : Int -> CatsIO ()
+sleep = sleepUnsafe
+
+%foreign "jvm:foreverIO(cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
+foreverUnsafe : CatsIO AnyPtr -> CatsIO ()
+
+public export
+foreverIO : CatsIO a -> CatsIO ()
+foreverIO a = foreverUnsafe $ unsafeCoerce a
