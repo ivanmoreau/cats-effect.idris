@@ -67,3 +67,10 @@ foreverUnsafe : CatsIO AnyPtr -> CatsIO ()
 public export
 foreverIO : CatsIO a -> CatsIO ()
 foreverIO a = foreverUnsafe $ unsafeCoerce a
+
+%foreign "jvm:ifM(cats/effect/IO cats/effect/IO cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
+ifMUnsafe : CatsIO Bool -> CatsIO AnyPtr -> CatsIO AnyPtr -> CatsIO AnyPtr
+
+public export
+ifM : CatsIO Bool -> CatsIO a -> CatsIO a -> CatsIO a
+ifM a b c = unsafeCoerce $ ifMUnsafe a (unsafeCoerce b) (unsafeCoerce c)

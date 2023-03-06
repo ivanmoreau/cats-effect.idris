@@ -21,3 +21,7 @@ start = Cats.Effect.CatsIO.Unsafe.start
 public export
 foreverIO : CatsIO a -> CatsIO ()
 foreverIO = Cats.Effect.CatsIO.Unsafe.foreverIO 
+
+public export
+ifM : CatsIO Bool -> CatsIO a -> CatsIO a -> CatsIO a
+ifM = Cats.Effect.CatsIO.Unsafe.ifM

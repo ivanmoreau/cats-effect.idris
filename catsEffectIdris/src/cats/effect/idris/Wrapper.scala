@@ -31,3 +31,5 @@ object Wrapper:
   def sleep(milli: Int): IO[Unit] = IO.sleep(milli.millisecond)
 
   def foreverIO(a: IO[Any]): IO[Any] = a.foreverM
+
+  def ifM(c: IO[Int], a: IO[Any], b: IO[Any]): IO[Any] = c.map(a => if a == 0 then false else true).ifM(a, b)
