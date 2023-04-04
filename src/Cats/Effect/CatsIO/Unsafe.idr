@@ -6,9 +6,22 @@ import Cats.Effect.FiberIO.FiberIO
 %foreign "jvm:unsafeCoerce,cats/effect/idris/Wrapper"
 unsafeCoerce : forall a, b. a -> b
 
+data ScalaFunction1 : Type -> Type -> Type where [external]
+
+-- From rom scala/Function1 to java/lang/Function
+%foreign "jvm:toJavaFun(scala/Function1 java/util/function/Function),cats/effect/idris/Wrapper"
+toJavaFunction : ScalaFunction1 a b -> (a -> b)
+
+-- From java/lang/Function to scala/Function1
+%foreign "jvm:fromJavaFun(java/util/function/Function scala/Function1),cats/effect/idris/Wrapper"
+unsafeFromJavaFunction : AnyPtr -> ScalaFunction1 a b
+
+fromJavaFunction : (a -> b) -> ScalaFunction1 a b
+fromJavaFunction f = unsafeFromJavaFunction $ unsafeCoerce f
+
 data IORuntime : Type where [external]
 
-%foreign "jvm:globalIO,cats/effect/idris/Wrapper"
+%foreign "jvm:global(cats/effect/unsafe/IORuntime),cats/effect/unsafe/implicits"
 globalIO : IORuntime
 
 %foreign "jvm:unsafeRunSync(cats/effect/IO cats/effect/unsafe/IORuntime java/lang/Object),cats/effect/idris/Wrapper"
@@ -19,33 +32,26 @@ runCatsIO : CatsIO a -> IO a
 runCatsIO c = pure $ unsafeCoerce $ flip unsafeRunSyncUnsafe globalIO $ unsafeCoerce c
 
 public export
-%foreign "jvm:ioPure(java/lang/Object cats/effect/IO),cats/effect/idris/Wrapper"
-pureIOUnsafe : AnyPtr -> CatsIO AnyPtr
+%foreign "jvm:pure(java/lang/Object cats/effect/IO),cats/effect/IO"
+pureIOUnsafe : a -> CatsIO a
 
 public export
 pureIO : a -> CatsIO a
-pureIO a = unsafeCoerce $ pureIOUnsafe $ unsafeCoerce a
+pureIO = pureIOUnsafe
 
-%foreign "jvm:ioMap(java/lang/Object cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
-mapIOUnsafe : AnyPtr -> CatsIO AnyPtr -> CatsIO AnyPtr
+%foreign "jvm:.map(cats/effect/IO scala/Function1 cats/effect/IO),cats/effect/IO"
+mapIOUnsafe : CatsIO a -> ScalaFunction1 a b -> CatsIO b
 
 public export
 mapIO : (a -> b) -> CatsIO a -> CatsIO b
-mapIO f io = unsafeCoerce $ mapIOUnsafe (unsafeCoerce f) (unsafeCoerce io)
+mapIO f a = mapIOUnsafe a $ fromJavaFunction f
 
-%foreign "jvm:ioAp(cats/effect/IO cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
-apIOUnsafe : CatsIO (AnyPtr -> AnyPtr) -> CatsIO AnyPtr -> CatsIO AnyPtr
-
-public export
-apIO : CatsIO (a -> b) -> CatsIO a -> CatsIO b
-apIO f io = unsafeCoerce $ apIOUnsafe (unsafeCoerce f) (unsafeCoerce io)
-
-%foreign "jvm:ioBind(cats/effect/IO java/lang/Object cats/effect/IO),cats/effect/idris/Wrapper"
-bindIOUnsafe : CatsIO AnyPtr -> AnyPtr -> CatsIO AnyPtr
+%foreign "jvm:.flatMap(cats/effect/IO scala/Function1 cats/effect/IO),cats/effect/IO"
+bindIOUnsafe : CatsIO a -> ScalaFunction1 a (CatsIO b) -> CatsIO b
 
 public export
 bindIO : CatsIO a -> (a -> CatsIO b) -> CatsIO b
-bindIO io f = unsafeCoerce $ bindIOUnsafe (unsafeCoerce io) (unsafeCoerce f)
+bindIO a f = bindIOUnsafe a $ fromJavaFunction f
 
 %foreign "jvm:start(cats/effect/IO cats/effect/IO),cats/effect/idris/Wrapper"
 startUnsafe : CatsIO AnyPtr -> CatsIO (FiberIO AnyPtr)

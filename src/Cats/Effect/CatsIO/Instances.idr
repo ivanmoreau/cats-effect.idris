@@ -10,7 +10,7 @@ Functor CatsIO where
 public export
 Applicative CatsIO where
   pure = pureIO
-  (<*>) = apIO
+  (<*>) f a = bindIO f (\f => mapIO f a)
 
 public export
 Monad CatsIO where

@@ -3,26 +3,23 @@ module Cats.Effect.Ref.Unsafe
 import Cats.Effect.Ref.Ref
 import Cats.Effect.CatsIO
 
-%foreign "jvm:unsafeCoerce,cats/effect/idris/Wrapper"
-unsafeCoerce : forall a, b. a -> b
-
-%foreign "jvm:refIO(java/lang/Object cats/effect/IO),cats/effect/idris/Ref"
-unsafeRefIO : AnyPtr -> CatsIO (Ref CatsIO AnyPtr)
+%foreign "jvm:ref(java/lang/Object cats/effect/IO),cats/effect/IO"
+unsafeRefIO : a -> CatsIO (Ref CatsIO a)
 
 public export
 refIO : a -> CatsIO (Ref CatsIO a)
-refIO v = unsafeCoerce $ unsafeRefIO $ unsafeCoerce v
+refIO = unsafeRefIO
 
-%foreign "jvm:setIO(java/lang/Object cats/effect/kernel/Ref cats/effect/IO),cats/effect/idris/Ref"
-unsafeSetIO : AnyPtr -> Ref CatsIO AnyPtr -> CatsIO (Ref CatsIO AnyPtr)
+%foreign "jvm:.set(cats/effect/kernel/Ref java/lang/Object java/lang/Object),cats/effect/kernel/Ref"
+unsafeSetIO : Ref CatsIO a -> a -> CatsIO ()
 
 public export
 setIO : a -> Ref CatsIO a -> CatsIO () 
-setIO a ref = unsafeCoerce $ unsafeSetIO (unsafeCoerce a) (unsafeCoerce ref)
+setIO = flip unsafeSetIO
 
-%foreign "jvm:getIO(cats/effect/kernel/Ref cats/effect/IO),cats/effect/idris/Ref"
-unsafeGetIO : Ref CatsIO AnyPtr -> CatsIO AnyPtr
+%foreign "jvm:.get(cats/effect/kernel/Ref java/lang/Object),cats/effect/kernel/Ref"
+unsafeGetIO : Ref CatsIO a -> CatsIO a
 
 public export
 getIO : Ref CatsIO a -> CatsIO a
-getIO ref = unsafeCoerce $ unsafeGetIO $ unsafeCoerce ref
+getIO = unsafeGetIO
